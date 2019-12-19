@@ -27,6 +27,18 @@ def download(title):
         ydl.extract_info("ytsearch:"+title+"lyrics", download=True)
 
 
+def initialize():
+    # Erase contents
+    file = open('songList.txt', 'r+')
+    file.truncate(0)
+    file.close()
+    # Print message to txt file
+    file = open('songList.txt', 'w')
+    file.write("Enter the names of songs below you wish to download:")
+    file.close()
+    print("The \"songList.txt\" file is ready to be written to.")
+
+
 def main():
     # File minipulation
     file = open('songList.txt', 'r')
@@ -51,18 +63,6 @@ def main():
 
     # Erases contents of file so no need to re-download songs
     initialize()
-
-
-def initialize():
-    # Erase contents
-    file = open('songList.txt', 'r+')
-    file.truncate(0)
-    file.close()
-    # Print message to txt file
-    file = open('songList.txt', 'w')
-    file.write("Enter the names of songs below you wish to download:")
-    file.close()
-    print("The \"songList.txt\" file is ready to be written to.")
 
 
 main()
