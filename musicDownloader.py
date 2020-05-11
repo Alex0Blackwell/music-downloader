@@ -36,7 +36,11 @@ def download(title, folder):
         titleSearch = title.replace(" ", "+")
         browser.get(f"https://www.youtube.com/results?search_query={titleSearch}+lyrics")
         link = browser.find_element_by_id("thumbnail").get_attribute("href")
-        ydl.download([link])
+        # let's try and download it
+        try:
+            ydl.download([link])
+        except:
+            print(f"{title} could not be downloaded.")
 
 
 def initialize():
