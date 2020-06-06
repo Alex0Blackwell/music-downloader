@@ -54,11 +54,11 @@ Note that Selenium requires a driver associated with your browser of choice, whi
 The path to the driver must be specified, in my code this is done on line 8 and the syntax is slightly different for different browsers.  
 For example using Firefox the line reads:  
 
-  browser = webdriver.Firefox(executable_path='/path/to/geckodriver')
+    browser = webdriver.Firefox(executable_path='/path/to/geckodriver')
 
 While using Chrome requires:  
 
-  driver = webdriver.Chrome('/path/to/chromedriver')
+    driver = webdriver.Chrome('/path/to/chromedriver')
 
 Note that if the driver is placed in */usr/bin* or */usr/local/bin* the argument giving the path to the driver is not needed.  
 In my case I'm using FireFox, which uses geckodriver to run Selenium.  
