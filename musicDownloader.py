@@ -4,7 +4,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import time as t
 
-# note there are a few file paths that you will have to change such as the following
+# Change the following line to match your browser and driver path
 browser = webdriver.Firefox(executable_path='/home/alex/Downloads/geckodriver')
 
 class MyLogger(object):
