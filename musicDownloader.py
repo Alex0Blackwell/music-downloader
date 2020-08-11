@@ -2,10 +2,14 @@ import youtube_dl
 import requests
 from selenium import webdriver
 from bs4 import BeautifulSoup
+import PySimpleGUI as sg
 import time as t
 
+
 # Change the following line to match your browser and driver path
-browser = webdriver.Firefox(executable_path='/home/alex/Downloads/geckodriver')
+print("Launching Selenium bot-driven driver.")
+browser = webdriver.Firefox(executable_path='./selenium-driver/geckodriver')
+
 
 class MyLogger(object):
     # For debugging and error throwing
@@ -39,90 +43,96 @@ def download(title, folder):
         # let's try and download it
         try:
             ydl.download([link])
-        except:
+        except Exception as e:
             print(f"{title} could not be downloaded.")
+            raise e
 
 
-def initialize():
-    # Erase contents
-    file = open('songList.txt', 'r+')
-    file.truncate(0)
-    file.close()
-    # Print message to txt file
-    file = open('songList.txt', 'w')
-    file.write("Enter the names of songs below you wish to download:")
-    file.close()
-    print("The \"songList.txt\" file is ready to be written to.")
+def driver(link, songs):
+    playlistName = ''
+    if(len(link) > 34):
+        # the user added to the spotify link, let's try to use it
 
-
-def main():
-    usrChoice = input("Type (1) to download from a Spotify playlist link.\nType (2) to download from the \"songList.txt\" file.\n")
-    if(usrChoice == '1'):
-        # The user wishes to download from the songList.txt file
-        print("Launching Selenium bot-driven driver.")
-
-        playlistLink = input("Enter the link of the Spotify Playlist you wish to download:\n")
         print("Requesting webpage.")
-        browser.get(playlistLink)
-
-        print("Waiting for the page to load js content.")
         t.sleep(2)
+
+        browser.get(link)
+
         content = browser.page_source.encode('utf-8').strip()
         soup = BeautifulSoup(content, "html.parser")
-
 
         allSongs = soup.find_all("div", {"class": "tracklist-name"})
         allArtistsRAW = soup.find_all("a", {"class": "tracklist-row__artist-name-link"})
 
-        allArtists = []
+        pageRequestSuccess = True
+        if(len(allSongs) == 0):
+            print("This playlist doesn't exist. Make sure you entered the playlist link correctly.")
+            pageRequestSuccess = False;
 
-        # for handling features
-        # always get the first artist
-        i = step = 0;
-        while(i < len(allArtistsRAW)):
-            thisArtist = allArtistsRAW[i].parent.parent.parent.text.split(',')
-            if(len(thisArtist) > 1):
-                # then there is a feature
-                i += len(thisArtist) - 1
-            allArtists.append(thisArtist[0])
-            i += 1
+        if(pageRequestSuccess):
 
-        playlistName = soup.find("h1").text
-        numSongs = len(allSongs)
-        # note that if the song is already downloaded ytdl does not download it twice
-        # note that if the file does not exist, ytdl automatically makes it
-        for i in range(numSongs):
-            searchFor = allSongs[i].text + ", " + allArtists[i]
-            print(f"({i+1}/{numSongs}) Downloading {allSongs[i].text} by {allArtists[i]} to {playlistName}...")
-            download(searchFor, playlistName)
-            print("Download complete.")
-        print(f"Completed all downloads ({numSongs})")
+            allArtists = []
 
-    elif(usrChoice == '2'):
-        # The user wishes to download from the songList.txt file
-        # File minipulation
-        file = open('songList.txt', 'r')
-        numLines = len(file.readlines())
-        file.close()
+            # for handling features
+            # always get the first artist
+            i = step = 0;
+            while(i < len(allArtistsRAW)):
+                thisArtist = allArtistsRAW[i].parent.parent.parent.text.split(',')
+                if(len(thisArtist) > 1):
+                    # then there is a feature
+                    i += len(thisArtist) - 1
+                allArtists.append(thisArtist[0])
+                i += 1
 
-        if(numLines <= 1):
-            print("You didn't add any songs to the text file.\n"
-                  "Open the \"songList.txt\" file and add the names of songs you "
-                  "wish to download.")
-
-        elif(numLines > 1):
-            for i in range(1, numLines):
-                file = open('songList.txt', 'r')
-                line = str(file.readlines()[i]).rstrip()
-                file.close()
-
-                print(f"Downloading: {line}...")
-                download(line, "File-Playlist")
+            playlistName = soup.find_all("h1")[1].text
+            print(playlistName)
+            numSongs = len(allSongs)
+            # note that if the song is already downloaded ytdl does not download it twice
+            # note that if the file does not exist, ytdl automatically makes it
+            for i in range(numSongs):
+                searchFor = allSongs[i].text + ", " + allArtists[i]
+                print(f"({i+1}/{numSongs}) Downloading {allSongs[i].text} by {allArtists[i]} to {playlistName}...")
+                download(searchFor, playlistName)
                 print("Download complete.")
-            print(f"Finished all downloads ({i})")
+            print(f"Completed all downloads ({numSongs})")
 
-        # Erases contents of file so no need to re-download songs
-        initialize()
 
-main()
-browser.close()  # close the Selenium browser
+    # download any additional songs typed
+    typedSongs = songs.split(',')  # [''] on empty
+
+    if(typedSongs[0] != '' or len(typedSongs) > 1):
+        if(playlistName == ''):
+            playlistName = "File-Playlist"
+
+        for song in typedSongs:
+            print(f"Downloading: {song}...")
+            download(song, playlistName)
+        print("Completed all downloads")
+
+
+def main():
+    sg.theme('DarkBlue14')
+    layout = [
+        [sg.Text('Spotify Playlist Link '), sg.InputText('https://open.spotify.com/playlist/', size=(41, 1))],
+        [sg.Text('Additionally, type the songs you want below separated by commas:')],
+        [sg.InputText(size=(60, 20))],
+        [sg.Submit('Download'), sg.Cancel()]
+    ]
+    window = sg.Window('Music Downloader', layout)
+    while True:
+        event, values = window.read()
+        if event in (None, 'Exit', 'Cancel'):
+            browser.quit()  # close the Selenium browser
+            window.close()  # close the GUI
+            break
+        if(event == 'Download'):
+            driver(values[0], values[1])
+
+    window.close()
+
+
+if __name__ == '__main__':
+    main()
+
+
+browser.quit()  # close the Selenium browser

@@ -14,13 +14,13 @@ By using YouTube-dl, Selenium, Beautifulsoup, and python, the names of songs can
 # Examples
 ### Screenshots
 
-  > Downloading the songs from my spotify playlist "they're making me make playlists, please help me"
+> Downloading the songs from my spotify playlist "I can't. I'm a gamer now"
 
-![Screenshot](pictures/overviewScreenshot.png "The program in action!")
+[![Screenshot](.pictures/music-downloader.gif "The program in action!")](https://github.com/Alex0Blackwell/music-downloader)
 
-  > The folder that was made with the songs
+> The folder that is made when downloading from a playlist
 
-![Folder](pictures/folder.png "The result!")
+[![Folder](.pictures/folder.png "The result!")](https://github.com/Alex0Blackwell/music-downloader)
 
 
 ## Technologies
@@ -31,6 +31,8 @@ By using YouTube-dl, Selenium, Beautifulsoup, and python, the names of songs can
   - Because Spotify needs the site to load JavaScript to display content
 - **youtube-dl -2020.6.6**
   - For downloading videos from YouTube
+- **PySimpleGUI -4.28**
+  - For the Graphical User Interface
 
 ## Setup
 To run this project, first install the requirements:
@@ -62,7 +64,7 @@ While using Chrome requires:
 
 Note that if the driver is placed in */usr/bin* or */usr/local/bin* the argument giving the path to the driver is not needed.  
 In my case I'm using FireFox, which uses geckodriver to run Selenium.  
-Note that you must change *line 8* in *musicDownloader.py* to match your browser and Selenium driver path
+Note that you must change *line 11* in *musicDownloader.py* to match your browser and Selenium driver path
 
 Once the Selenium drivers are installed, and the *musicDownloader.py* code is updated, run the python file with:
 
@@ -71,7 +73,7 @@ Once the Selenium drivers are installed, and the *musicDownloader.py* code is up
 If there are any troubles with Selenium's required drivers, take a look at the excellent [Selenium Documentation](https://www.selenium.dev/selenium/docs/api/py/index.html).
 
 ## Usage
-To use the program, type in the names of songs you want downloaded into the *songList.txt* file. Alternatively, paste the link of an **online** Spotify playlist and the program will scrape all the songs from that playlist. You will have a choice of what method you wish to use when the script is run. With either method, the songs will be downloaded to the *~/Music/"Playlist name"* directory.
+When the program is run, a GUI will prompt for either a Spotify playlist link, or a list of songs separated by commas. If a spotify link is pasted into the textbox, the program will scrape all the songs off that playlist. The program will then download all those songs and add them to a new folder in the *~/Music/* directory named after the playlist. Any songs entered in the textbox separated by commas will additionally be downloaded.
 
 ## Limitations
 - Selenium must be used instead of only using Beautifulsoup4
