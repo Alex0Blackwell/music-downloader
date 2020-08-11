@@ -9,7 +9,7 @@
 * [Limitations](#limitations)
 
 ## Overview
-By using YouTube-dl, Selenium, Beautifulsoup, and python, the names of songs can be entered in a *.txt* file, or scraped from a Spotify playlist. The program will search YouTube for the top lyrical video and download the audio to the user's *Music* folder in a folder named after the playlist.
+Download all the songs from your Spotify playlist by just pasting in the link! This program will scrape all the songs from a Spotify playlist and put it in a folder in your music directory named after the playlist. Additionally, individual songs can be added to a text prompt and those songs will be downloaded.
 
 # Examples
 ### Screenshots
@@ -56,11 +56,11 @@ Note that Selenium requires a driver associated with your browser of choice, whi
 The path to the driver must be specified, in my code this is done on line 8 and the syntax is slightly different for different browsers.  
 For example using Firefox the line reads:  
 
-  browser = webdriver.Firefox(executable_path='/path/to/geckodriver')
+    browser = webdriver.Firefox(executable_path='/path/to/geckodriver')
 
 While using Chrome requires:  
 
-  driver = webdriver.Chrome('/path/to/chromedriver')
+    driver = webdriver.Chrome('/path/to/chromedriver')
 
 Note that if the driver is placed in */usr/bin* or */usr/local/bin* the argument giving the path to the driver is not needed.  
 In my case I'm using FireFox, which uses geckodriver to run Selenium.  
