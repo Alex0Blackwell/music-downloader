@@ -36,8 +36,13 @@ Download all the songs from your Spotify playlist by just pasting in the link! T
 
 ## Setup
 To run this project, first install the requirements:
+On Linux:
 
     pip3 install -r requirements
+
+On Windows:
+
+    pip install -r requirements
 
 Note that Selenium requires a driver associated with your browser of choice, which can be downloaded off the Selenium website.
   - **Firefox driver (geckodriver)**
@@ -67,8 +72,11 @@ In my case I'm using FireFox, which uses geckodriver to run Selenium.
 Note that you must change *line 11* in *musicDownloader.py* to match your browser and Selenium driver path
 
 Once the Selenium drivers are installed, and the *musicDownloader.py* code is updated, run the python file with:
-
+On Linux:
     python musicDownloader.py
+
+On Windows:
+    py musicDownloader.py
 
 If there are any troubles with Selenium's required drivers, take a look at the excellent [Selenium Documentation](https://www.selenium.dev/selenium/docs/api/py/index.html).
 
